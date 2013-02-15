@@ -25,6 +25,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Social/Social.h>
 
 //  The SLRequest and TWRequest share method signatures, so we can use this
 //  protocol to hush any compiler warnings
@@ -40,6 +41,9 @@
 typedef void(^ReverseAuthResponseHandler)(NSData *responseData, NSError *error);
 
 @interface TWAPIManager : NSObject
+
+@property (nonatomic, copy) NSString * consumerKey;
+@property (nonatomic, copy) NSString * consumerSecret;
 
 /**
  *  Obtains the access token and secret for |account| using either TWRequest or

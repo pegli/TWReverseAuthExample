@@ -149,7 +149,7 @@ typedef void(^TWAPIHandler)(NSData *data, NSError *error);
 
     NSDictionary *step2Params = [NSDictionary
                                  dictionaryWithObjectsAndKeys:
-                                 [TWSignedRequest consumerKey],
+                                 self.consumerKey,
                                  TW_X_AUTH_REVERSE_TARGET,
                                  signedReverseAuthSignature,
                                  TW_X_AUTH_REVERSE_PARMS,
@@ -188,6 +188,8 @@ typedef void(^TWAPIHandler)(NSData *data, NSError *error);
     TWSignedRequest *step1Request = [[TWSignedRequest alloc]
                                      initWithURL:url
                                      parameters:dict
+                                     consumerKey:self.consumerKey
+                                     consumerSecret:self.consumerSecret
                                      requestMethod:TWSignedRequestMethodPOST];
 
     [step1Request performRequestWithHandler:

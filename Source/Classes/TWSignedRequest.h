@@ -46,12 +46,11 @@ void(^TWSignedRequestHandler)
 // Creates a new request
 - (id)initWithURL:(NSURL *)url
        parameters:(NSDictionary *)parameters
+      consumerKey:(NSString *)consumerKey
+   consumerSecret:(NSString *)consumerSecret
     requestMethod:(TWSignedRequestMethod)requestMethod;
 
 // Perform the request, and notify handler of results
 - (void)performRequestWithHandler:(TWSignedRequestHandler)handler;
 
-// You should ensure that you obfuscate your keys before shipping
-+ (NSString *)consumerKey;
-+ (NSString *)consumerSecret;
 @end

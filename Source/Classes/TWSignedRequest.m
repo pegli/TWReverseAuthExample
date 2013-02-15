@@ -32,9 +32,6 @@
 #define TW_HTTP_METHOD_DELETE @"DELETE"
 #define TW_HTTP_HEADER_AUTHORIZATION @"Authorization"
 
-#define kTWConsumerKey TWITTER_CONSUMER_KEY
-#define kTWConsumerSecret TWITTER_CONSUMER_SECRET
-
 @interface TWSignedRequest()
 {
     NSURL *_url;
@@ -42,6 +39,8 @@
     TWSignedRequestMethod _signedRequestMethod;
 }
 
+@property (nonatomic, copy) NSString * consumerKey;
+@property (nonatomic, copy) NSString * consumerSecret;
 - (NSURLRequest *)_buildRequest;
 
 @end
@@ -49,16 +48,23 @@
 @implementation TWSignedRequest
 @synthesize authToken = _authToken;
 @synthesize authTokenSecret = _authTokenSecret;
+@synthesize consumerKey = _consumerKey;
+@synthesize consumerSecret = _consumerSecret;
 
 - (id)initWithURL:(NSURL *)url
        parameters:(NSDictionary *)parameters
+      consumerKey:(NSString *)consumerKey
+   consumerSecret:(NSString *)consumerSecret
     requestMethod:(TWSignedRequestMethod)requestMethod;
 {
     self = [super init];
     if (self) {
-        _url = url;
-        _parameters = parameters;
+        _url = [url copy];
+        _parameters = [parameters copy];
         _signedRequestMethod = requestMethod;
+        _consumerKey = [consumerKey copy];
+        _consumerSecret = [consumerSecret copy];
+        NSLog(@"key %@ secret %@", self.consumerKey, self.consumerSecret);
     }
     return self;
 }
@@ -91,10 +97,8 @@
     NSString *authorizationHeader = OAuthorizationHeader(_url,
                                                          method,
                                                          bodyData,
-                                                         [TWSignedRequest
-                                                          consumerKey],
-                                                         [TWSignedRequest
-                                                          consumerSecret],
+                                                         _consumerKey,
+                                                         _consumerSecret,
                                                          _authToken,
                                                          _authTokenSecret);
     
@@ -121,22 +125,6 @@
                                        error:&error];
                        handler(data, response, error);
                    });
-}
-
-// OBFUSCATE YOUR KEYS!
-+ (NSString *)consumerKey
-{
-    NSAssert([kTWConsumerKey length] > 0,
-             @"You must enter your consumer key in Build Settings.");
-    return kTWConsumerKey;
-}
-
-// OBFUSCATE YOUR KEYS!
-+ (NSString *)consumerSecret
-{
-    NSAssert([kTWConsumerSecret length] > 0,
-             @"You must enter your consumer secret in Build Settings.");
-    return kTWConsumerSecret;
 }
 
 @end
