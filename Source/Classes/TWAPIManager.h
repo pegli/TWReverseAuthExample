@@ -39,6 +39,8 @@
 @class ACAccount;
 
 typedef void(^ReverseAuthResponseHandler)(NSData *responseData, NSError *error);
+typedef void(^TWAPIHandler)(NSData *data, NSError *error);
+
 
 @interface TWAPIManager : NSObject
 
@@ -76,5 +78,7 @@ typedef void(^ReverseAuthResponseHandler)(NSData *responseData, NSError *error);
  * Returns true if there are local Twitter accounts available.
  */
 + (BOOL)isLocalTwitterAccountAvailable;
+
+- (void)accountSettingsForKey:(NSString *)key secret:(NSString *)secret handler:(TWAPIHandler)handler;
 
 @end

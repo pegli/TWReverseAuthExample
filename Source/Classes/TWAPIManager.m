@@ -31,8 +31,6 @@
 #import "TWAPIManager.h"
 #import "TWSignedRequest.h"
 
-typedef void(^TWAPIHandler)(NSData *data, NSError *error);
-
 @implementation TWAPIManager
 
 /**
@@ -199,6 +197,29 @@ typedef void(^TWAPIHandler)(NSData *data, NSError *error);
                             completion(data, error);
                         });
      }];
+}
+
+#pragma mark -
+#pragma mark API 1.1
+
+#define TW_ACCOUNT_SETTINGS      TW_API_ROOT "/1.1/account/settings.json"
+
+-(void)accountSettingsForKey:(NSString *)key secret:(NSString *)secret handler:(TWAPIHandler)handler {
+    NSURL * url = [NSURL URLWithString:TW_ACCOUNT_SETTINGS];
+    TWSignedRequest * req = [[TWSignedRequest alloc] initWithURL:url
+                                                      parameters:nil
+                                                     consumerKey:self.consumerKey
+                                                  consumerSecret:self.consumerSecret
+                                                   requestMethod:TWSignedRequestMethodGET];
+    req.authToken = key;
+    req.authTokenSecret = secret;
+    NSLog(@"[INFO] account info token: %@", req.authToken);
+    [req performRequestWithHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSLog(@"[INFO] account settings request");
+        dispatch_async(dispatch_get_main_queue(), ^{
+                           handler(data, error);
+                       });
+    }];
 }
 
 @end
